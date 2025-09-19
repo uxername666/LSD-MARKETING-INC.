@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coming Soon — 3 Months Countdown</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#0f1720;
+      --accent:#4aa3e0;
+      --muted:#9aa7b6;
+      --glass: rgba(255,255,255,0.03);
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 400px at 10% 10%, rgba(74,163,224,0.06), transparent), var(--bg);
+      color:#e6eef6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .card{
+      width:100%;
+      max-width:820px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:18px;
+      padding:32px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      display:grid;
+      grid-template-columns: 180px 1fr;
+      gap:24px;
+      align-items:center;
+    }
+
+    .logo-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
+    }
+    .logo{
+      width:140px;
+      height:140px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--glass);
+      border-radius:12px;
+      padding:14px;
+    }
+    .logo img{max-width:100%; max-height:100%; display:block;}
+
+    h1{margin:0; font-size:28px; letter-spacing:0.4px}
+    p.lead{margin:6px 0 18px 0; color:var(--muted)}
+
+    .countdown{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .segment{
+      background:rgba(255,255,255,0.03);
+      padding:14px 18px;
+      border-radius:10px;
+      min-width:92px;
+      text-align:center;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+    }
+    .number{font-size:24px; font-weight:700}
+    .label{font-size:12px; color:var(--muted); margin-top:6px}
+
+    .coming{
+      display:inline-block;
+      margin-top:14px;
+      background: linear-gradient(90deg,var(--accent), #2b7fbf);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      font-weight:800;
+      font-size:20px;
+      letter-spacing:1px;
+    }
+
+    .progress-wrap{
+      margin-top:18px;
+    }
+    .progress{
+      width:100%;
+      height:10px;
+      background:rgba(255,255,255,0.03);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .progress > i{
+      display:block;
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, #4aa3e0, #2b7fbf);
+      border-radius:999px;
+      transition:width 0.6s ease;
+    }
+
+    .meta{font-size:13px; color:var(--muted); margin-top:10px}
+
+    @media (max-width:720px){
+      .card{grid-template-columns:1fr; padding:20px}
+      .logo{width:110px;height:110px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="region" aria-labelledby="coming-title">
+    <div class="logo-wrap">
+      <div class="logo" aria-hidden="true">
+        <img src="C:\Users\GeoPro\Desktop\JPM FILES\website\lsd\logo.png" alt="Logo">
+      </div>
+      <div class="coming">COMING SOON</div>
+    </div>
+
+    <div>
+      <h1 id="coming-title">Stay tuned. Our site is launching soon.</h1>
+      <p class="lead">A new site is on the way. We're putting the final touches and will be live after this countdown.</p>
+
+      <div class="countdown" aria-live="polite">
+        <div class="segment">
+          <div class="number" id="months">0</div>
+          <div class="label">Months</div>
+        </div>
+        <div class="segment">
+          <div class="number" id="days">0</div>
+          <div class="label">Days</div>
+        </div>
+        <div class="segment">
+          <div class="number" id="hours">0</div>
+          <div class="label">Hours</div>
+        </div>
+        <div class="segment">
+          <div class="number" id="minutes">0</div>
+          <div class="label">Minutes</div>
+        </div>
+        <div class="segment">
+          <div class="number" id="seconds">0</div>
+          <div class="label">Seconds</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+        <div class="meta" id="meta">Time remaining until launch</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Calculate a target date 3 months from now (keeps the same day/time where possible)
+    const now = new Date();
+    const target = new Date(now.getFullYear(), now.getMonth() + 3, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
+
+    // Helper to get total seconds between two dates
+    function diffSeconds(a, b){ return Math.max(0, Math.floor((b - a) / 1000)); }
+
+    function update(){
+      const current = new Date();
+      let totalSeconds = diffSeconds(current, target);
+
+      if(totalSeconds <= 0){
+        document.getElementById('months').textContent = '0';
+        document.getElementById('days').textContent = '0';
+        document.getElementById('hours').textContent = '0';
+        document.getElementById('minutes').textContent = '0';
+        document.getElementById('seconds').textContent = '0';
+        document.getElementById('meta').textContent = 'We are live — thank you!';
+        document.getElementById('prog').style.width = '100%';
+        clearInterval(timer);
+        return;
+      }
+
+      // Calculate months and remainder by comparing months difference roughly
+      // We'll compute months by incrementing from now until we reach/ exceed target
+      const temp = new Date(current.getTime());
+      let months = 0;
+      while(true){
+        const test = new Date(temp.getFullYear(), temp.getMonth() + 1, temp.getDate(), temp.getHours(), temp.getMinutes(), temp.getSeconds());
+        if(test <= target){ months++; temp.setMonth(temp.getMonth()+1); }
+        else break;
+      }
+
+      // After removing months, compute remaining time
+      const afterMonths = new Date(current.getFullYear(), current.getMonth() + months, current.getDate(), current.getHours(), current.getMinutes(), current.getSeconds());
+      let remaining = diffSeconds(afterMonths, target);
+
+      const days = Math.floor(remaining / 86400); remaining -= days * 86400;
+      const hours = Math.floor(remaining / 3600); remaining -= hours * 3600;
+      const minutes = Math.floor(remaining / 60); remaining -= minutes * 60;
+      const seconds = remaining;
+
+      document.getElementById('months').textContent = months;
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = String(hours).padStart(2,'0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2,'0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2,'0');
+
+      // progress: fraction of time elapsed from now relative to 3-month window
+      const totalWindowSeconds = diffSeconds(new Date(), target) + diffSeconds(new Date(), new Date(new Date().getFullYear(), new Date().getMonth()+3, new Date().getDate(), new Date().getHours(), new Date().getMinutes(), new Date().getSeconds()));
+      // The above is awkward; instead compute original window length at page load:
+    }
+
+    // To compute progress reliably we store the original start and end
+    const startTime = new Date();
+    const endTime = target;
+    const totalWindow = Math.max(1, Math.floor((endTime - startTime) / 1000));
+
+    function updateProgress(){
+      const now2 = new Date();
+      const elapsed = Math.floor((now2 - startTime) / 1000);
+      const pct = Math.min(100, Math.max(0, Math.round((elapsed / totalWindow) * 100)));
+      document.getElementById('prog').style.width = pct + '%';
+    }
+
+    // Put together an update that calls both
+    function tick(){ update(); updateProgress(); }
+    tick();
+    const timer = setInterval(tick, 1000);
+  </script>
+</body>
+</html>
